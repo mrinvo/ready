@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Api\V1;
-use App\Http\Requests\Api\V1\UserRequest;
-use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Verfication;
 use Illuminate\Support\Carbon;
 
-class DriveController extends Controller
+
+use Illuminate\Http\Request;
+
+class CamelController extends Controller
 {
     //
     public function Register(Request $request){
@@ -17,14 +18,14 @@ class DriveController extends Controller
             'phone' => 'required',
         ]);
 
-        $driver = User::where('phone',$request->phone)->where('user_type',1)->first();
+        $driver = User::where('phone',$request->phone)->where('user_type',2)->first();
         if($driver){
             $otp = $this->generateOtp($driver->phone);
         }else{
             $user = User::create([
 
                 'phone' => $request->phone,
-                'user_type' => 1,
+                'user_type' => 2,
 
             ]);
 
@@ -132,77 +133,33 @@ class DriveController extends Controller
         return response('data stored',201);
 
     }
-    public function driving_lic(Request $request){
+    public function logout(Request $request){
         $request->validate([
-            'driving_lic_front' => 'required|file',
-            'driving_lic_back'=> 'required|file',
+            'destroy' => 'required|boolean',
         ]);
+        if($request->destroy == 0){
+            auth()->user()->tokens()->delete();
 
-        $file_path = $request->file('file')->store('api/drivers','public');
-        $user = User::find($request->user()->id);
 
-        $user->update([
-            'driving_lic_front' => asset('storage/'.$file_path),
-            'driving_lic_back' => asset('storage/'.$file_path),
-        ]);
 
-        return response('data stored',201);
+
+
+
+            return [
+                'messege' =>'Logged out'
+            ];
+
+        }else{
+            auth()->user()->tokens()->delete();
+            User::find($request->user()->id)->delete();
+
+
+            return [
+                'messege' =>'user deleted'
+            ];
+
+
+        }
 
     }
-
-
-    public function car_lic(Request $request){
-        $request->validate([
-            'car_lic_front' => 'required|file',
-            'car_lic_back'=> 'required|file',
-        ]);
-
-        $file_path = $request->file('file')->store('api/drivers','public');
-        $user = User::find($request->user()->id);
-
-        $user->update([
-            'car_lic_front' => asset('storage/'.$file_path),
-            'car_lic_back' => asset('storage/'.$file_path),
-        ]);
-
-        return response('data stored',201);
-
-    }
-    public function photo(Request $request){
-        $request->validate([
-            'photo_front' => 'required|file',
-            'photo_back'=> 'required|file',
-        ]);
-
-        $file_path = $request->file('file')->store('api/drivers','public');
-        $user = User::find($request->user()->id);
-
-        $user->update([
-            'photo_front' => asset('storage/'.$file_path),
-            'photo_back' => asset('storage/'.$file_path),
-        ]);
-
-        return response('data stored',201);
-
-    }
-
-    public function personal_id_photo(Request $request){
-        $request->validate([
-            'personal_id_photo_front' => 'required|file',
-            'personal_id_photo_back'=> 'required|file',
-        ]);
-
-        $file_path = $request->file('file')->store('api/drivers','public');
-        $user = User::find($request->user()->id);
-
-        $user->update([
-            'personal_id_photo_front' => asset('storage/'.$file_path),
-            'personal_id_photo_back' => asset('storage/'.$file_path),
-            'verified' => 1,
-        ]);
-
-        return response('data stored',201);
-
-    }
-
 }

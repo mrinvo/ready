@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Controllers\Api\V1\DriveController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\CamelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,8 +30,21 @@ Route::group(['prefix' => 'v1'], function () {
     //guest routes
 
 
-    Route::post('/register',[DriverController::class,'Register']);
-    Route::post('/verify',[UserController::class,'verify'])->middleware('auth:sanctum');
+    Route::post('/driver/register',[DriveController::class,'Register']);
+    Route::post('/driver/verify',[DriveController::class,'verify'])->middleware('auth:sanctum');
+    Route::post('/driver/name',[DriveController::class,'name'])->middleware('auth:sanctum');
+    Route::post('/driver/driving_lic',[DriveController::class,'driving_lic'])->middleware('auth:sanctum');
+    Route::post('/driver/car_lic',[DriveController::class,'car_lic'])->middleware('auth:sanctum');
+    Route::post('/driver/photo',[DriveController::class,'photo'])->middleware('auth:sanctum');
+    Route::post('/driver/personal_id_photo',[DriveController::class,'personal_id_photo'])->middleware('auth:sanctum');
+    Route::post('/driver/logout',[DriveController::class,'logout'])->middleware('auth:sanctum');
+
+    Route::post('/camel/register',[CamelController::class,'Register']);
+    Route::post('/camel/verify',[CamelController::class,'verify'])->middleware('auth:sanctum');
+    Route::post('/camel/name',[CamelController::class,'name'])->middleware('auth:sanctum');
+    Route::post('/camel/logout',[CamelController::class,'logout'])->middleware('auth:sanctum');
+
+
     Route::post('/Regenerate',[UserController::class,'Regenerate'])->middleware('auth:sanctum');
     Route::post('/login',[UserController::class,'login']);
     Route::post('/logout',[UserController::class,'logout'])->middleware('auth:sanctum');

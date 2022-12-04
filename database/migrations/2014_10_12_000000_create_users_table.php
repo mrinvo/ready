@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('photo_back')->nullable();
             $table->string('personal_id_photo_front')->nullable();
             $table->string('personal_id_photo_back')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
             $table->enum('verified',[0,1,2])->default(0);
             // $table->string('password');
             $table->rememberToken();
